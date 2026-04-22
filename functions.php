@@ -1,6 +1,6 @@
 <?php
 /**
- * 大海导航 Theme Functions
+ * AI Navigator Hub Theme Functions
  *
  * @package AI_Navigator_Hub
  * @version 1.0.0
@@ -42,8 +42,8 @@ function ai_navigator_hub_setup() {
 
     // 注册导航菜单
     register_nav_menus( array(
-        'primary'   => __( 'Primary Menu', 'dh-nav' ),
-        'footer'    => __( 'Footer Menu', 'dh-nav' ),
+        'primary'   => __( 'Primary Menu', 'ai-navigator-hub' ),
+        'footer'    => __( 'Footer Menu', 'ai-navigator-hub' ),
     ) );
 
     // 添加 REST API 支持
@@ -60,11 +60,11 @@ add_action( 'after_setup_theme', 'ai_navigator_hub_setup' );
 function ai_navigator_hub_scripts() {
     // 获取主题目录 URI (使用 get_stylesheet_directory_uri 以支持子主题)
     $theme_uri = get_stylesheet_directory_uri();
-    $version   = wp_get_theme( 'dh-nav' )->get( 'Version' );
+    $version   = wp_get_theme( 'ai-navigator-hub' )->get( 'Version' );
 
     // 加载 React 应用的主样式
     wp_enqueue_style(
-        'dh-nav-styles',
+        'ai-navigator-hub-styles',
         $theme_uri . '/assets/index-Dxk-UkNV.css',
         array(),
         $version
@@ -72,7 +72,7 @@ function ai_navigator_hub_scripts() {
 
     // 加载 React 应用的主脚本
     wp_enqueue_script(
-        'dh-nav-scripts',
+        'ai-navigator-hub-scripts',
         $theme_uri . '/assets/index-t75xRreW.js',
         array(),
         $version,
@@ -89,7 +89,7 @@ function ai_navigator_hub_scripts() {
     );
 
     // 添加全局配置到脚本
-    wp_localize_script( 'dh-nav-scripts', 'wpConfig', array(
+    wp_localize_script( 'ai-navigator-hub-scripts', 'wpConfig', array(
         'apiUrl'      => rest_url(),
         'nonce'       => wp_create_nonce( 'wp_rest' ),
         'homeUrl'     => home_url(),
@@ -148,8 +148,8 @@ function ai_navigator_register_settings() {
     register_setting('ai_navigator_site_settings', 'ai_navigator_friend_links', array('type' => 'string', 'sanitize_callback' => 'wp_kses_post'));
 
     // 自定义代码
-    register_setting('ai_navigator_site_settings', 'ai_navigator_head_js', array('type' => 'string', 'sanitize_callback' => 'wp_kses_post'));
-    register_setting('ai_navigator_site_settings', 'ai_navigator_footer_js', array('type' => 'string', 'sanitize_callback' => 'wp_kses_post'));
+    register_setting('ai_navigator_site_settings', 'ai_navigator_head_js', array('type' => 'string'));
+    register_setting('ai_navigator_site_settings', 'ai_navigator_footer_js', array('type' => 'string'));
 }
 add_action('admin_init', 'ai_navigator_register_settings');
 
@@ -166,9 +166,9 @@ function ai_navigator_get_site_name() {
 function ai_navigator_output_head_js() {
     $head_js = get_option('ai_navigator_head_js', '');
     if (!empty($head_js)) {
-        echo "\n<!-- 大海导航 - 自定义 Head 代码 -->\n";
+        echo "\n<!-- AI Navigator Hub - 自定义 Head 代码 -->\n";
         echo $head_js;
-        echo "\n<!-- / 大海导航 - 自定义 Head 代码 -->\n";
+        echo "\n<!-- / AI Navigator Hub - 自定义 Head 代码 -->\n";
     }
 }
 add_action('wp_head', 'ai_navigator_output_head_js');
@@ -179,9 +179,9 @@ add_action('wp_head', 'ai_navigator_output_head_js');
 function ai_navigator_output_footer_js() {
     $footer_js = get_option('ai_navigator_footer_js', '');
     if (!empty($footer_js)) {
-        echo "\n<!-- 大海导航 - 自定义 Footer 代码 -->\n";
+        echo "\n<!-- AI Navigator Hub - 自定义 Footer 代码 -->\n";
         echo $footer_js;
-        echo "\n<!-- / 大海导航 - 自定义 Footer 代码 -->\n";
+        echo "\n<!-- / AI Navigator Hub - 自定义 Footer 代码 -->\n";
     }
 }
 add_action('wp_footer', 'ai_navigator_output_footer_js');

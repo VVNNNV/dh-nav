@@ -117,13 +117,18 @@ while ($hot_tools->have_posts()) : $hot_tools->the_post();
     $tool_id = get_the_ID();
     $tool_url = get_post_meta($tool_id, 'tool_url', true);
     $tool_icon = get_post_meta($tool_id, 'tool_icon', true);
+    $tool_hot = get_post_meta($tool_id, 'tool_hot', true);
+    $tool_categories = get_the_terms($tool_id, 'ai_category');
     $tool_tags = get_the_terms($tool_id, 'ai_tag');
+    
+    $primary_cat = !empty($tool_categories) && !is_wp_error($tool_categories) ? $tool_categories[0] : null;
     
     $tags_data = array();
     if (!empty($tool_tags) && !is_wp_error($tool_tags)) {
         foreach ($tool_tags as $tag) {
             $tags_data[] = array(
                 'name' => $tag->name,
+                'slug' => $tag->slug,
                 'link' => get_term_link($tag),
             );
         }
@@ -134,7 +139,11 @@ while ($hot_tools->have_posts()) : $hot_tools->the_post();
         'title' => get_the_title(),
         'url' => $tool_url,
         'icon' => $tool_icon ?: mb_substr(get_the_title(), 0, 1),
+        'hot' => $tool_hot,
         'desc' => get_the_excerpt() ?: get_the_content() ?: '暂无描述',
+        'cat_slug' => $primary_cat ? $primary_cat->slug : '',
+        'cat_name' => $primary_cat ? $primary_cat->name : '',
+        'cat_link' => $primary_cat ? get_term_link($primary_cat) : '',
         'tags' => $tags_data,
     );
 endwhile;
@@ -1040,6 +1049,15 @@ if (!empty($contact_info)) {
             .modal-actions { flex-direction: column; }
         }
     </style>
+    <?php
+    // 阻止 React 应用的资源加载到 front-page
+    add_action('wp_enqueue_scripts', function() {
+        wp_dequeue_style('ai-navigator-hub-styles');
+        wp_dequeue_script('ai-navigator-hub-scripts');
+        wp_dequeue_script('ai-navigator-tag-links');
+    }, 100);
+    wp_head();
+    ?>
 </head>
 <body>
     <!-- 头部 -->
@@ -1299,7 +1317,7 @@ if (!empty($contact_info)) {
     <script>
     <?php if ($click_action !== 'detail') : ?>
     // 网站数据
-    const toolsData = <?php echo json_encode($tools_data); ?>;
+    const toolsData = <?php echo json_encode(array_merge($tools_data, $hot_tools_data)); ?>;
     let currentUrl = '';
     
     // 打开弹窗
@@ -1505,6 +1523,7 @@ if (!empty($contact_info)) {
         });
     })();
     </script>
+    <?php wp_footer(); ?>
 </body>
 </html>
 <?php

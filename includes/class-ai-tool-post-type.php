@@ -41,6 +41,7 @@ function ai_navigator_register_post_types() {
         'hierarchical' => true,
         'show_ui' => true,
         'show_admin_column' => true,
+        'show_in_nav_menus' => true,
         'query_var' => true,
         'show_in_rest' => true,
         'rest_base' => 'ai_category',
@@ -53,6 +54,7 @@ function ai_navigator_register_post_types() {
         'hierarchical' => false,
         'show_ui' => true,
         'show_admin_column' => true,
+        'show_in_nav_menus' => true,
         'query_var' => true,
         'show_in_rest' => true,
         'rest_base' => 'ai_tag',
@@ -493,10 +495,14 @@ add_action('switch_theme', 'ai_navigator_deactivate');
 /**
  * Admin init fallback: 确保示例数据已创建
  * 防止 after_switch_theme 未触发的情况（如通过 FTP 上传主题后直接选择）
+ * 如果用户主动清空过数据，则不再自动导入
  */
 function ai_navigator_ensure_sample_data() {
     // 仅在后台执行
     if (!is_admin()) return;
+    
+    // 如果用户主动清空过数据，不再自动导入
+    if (get_option('dh_nav_data_cleared')) return;
     
     // 检查是否需要创建示例数据
     $existing = get_posts(array('post_type' => 'ai_tool', 'posts_per_page' => 1, 'post_status' => 'publish'));

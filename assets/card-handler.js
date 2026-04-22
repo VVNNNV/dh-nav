@@ -1,5 +1,5 @@
 /**
- * 大海导航 - Card Click Handler
+ * AI Navigator Hub - Card Click Handler
  * 根据后台设置决定卡片跳转行为
  */
 (function() {

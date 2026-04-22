@@ -136,6 +136,7 @@ function ai_navigator_admin_page() {
     if ( isset( $_POST['ai_navigator_import_nonce'] ) && wp_verify_nonce( $_POST['ai_navigator_import_nonce'], 'ai_navigator_import' ) ) {
         require_once get_template_directory() . '/includes/class-ai-tool-post-type.php';
         ai_navigator_create_sample_data();
+        delete_option('dh_nav_data_cleared');
         $message = '演示数据导入成功！';
         $message_type = 'success';
     }
@@ -268,6 +269,9 @@ function ai_navigator_delete_all_data() {
 
     foreach ( get_terms( array('taxonomy' => 'ai_category', 'hide_empty' => false) ) as $cat ) { wp_delete_term( $cat->term_id, 'ai_category' ); }
     foreach ( get_terms( array('taxonomy' => 'ai_tag', 'hide_empty' => false) ) as $tag ) { wp_delete_term( $tag->term_id, 'ai_tag' ); }
+
+    // 标记用户主动清空，防止 admin_init fallback 自动重新导入
+    update_option('dh_nav_data_cleared', true);
 }
 
 /**
@@ -743,8 +747,8 @@ function ai_navigator_settings_page() {
         update_option('ai_navigator_copyright', sanitize_text_field($_POST['copyright'] ?? ''));
         update_option('ai_navigator_contact_info', wp_kses_post($_POST['contact_info'] ?? ''));
         update_option('ai_navigator_friend_links', wp_kses_post($_POST['friend_links'] ?? ''));
-        update_option('ai_navigator_head_js', wp_kses_post($_POST['head_js'] ?? ''));
-        update_option('ai_navigator_footer_js', wp_kses_post($_POST['footer_js'] ?? ''));
+        update_option('ai_navigator_head_js', $_POST['head_js'] ?? '');
+        update_option('ai_navigator_footer_js', $_POST['footer_js'] ?? '');
 
         echo '<div class="notice notice-success is-dismissible"><p>设置已保存！</p></div>';
     }

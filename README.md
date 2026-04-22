@@ -2,6 +2,15 @@
 
 基于 WordPress 的 AI 工具导航站主题，使用 PHP + Tailwind CSS 构建现代化前端界面。
 
+## 在线演示
+
+- **演示站点**：https://www.dhjc.net
+
+## 视频教程
+
+- [B站视频安装教程](https://www.bilibili.com/video/BV1Hmo4BsEQm/)
+- [YouTube 安装教程](https://youtu.be/gGPhzdiNeIk)
+
 ## 功能特性
 
 - 自定义文章类型 `ai_tool`（AI 工具）
